@@ -11,7 +11,7 @@ export default function LoginPage() {
                    <FormInput
                        type="email"
                        name="email"
-                       placeholder="email"
+                       placeholder="Email"
                    />
                </Label>
                <Label>
@@ -19,7 +19,7 @@ export default function LoginPage() {
                    <FormInput
                        type="password"
                        name="password"
-                       placeholder="password"
+                       placeholder="Password"
                    />
                </Label>
                    <Button type="submit">Login</Button>           

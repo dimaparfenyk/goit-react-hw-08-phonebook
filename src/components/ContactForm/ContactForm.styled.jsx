@@ -30,6 +30,7 @@ export const Button = styled.button`
     background-color: #457aab;
     border: none;
     border-radius:8px;
+    text-transform: uppercase;
     color: white;
     cursor: pointer;
     height: 40px;

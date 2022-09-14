@@ -1,14 +1,18 @@
 import { useState } from "react";
-import { useGetContactsQuery, useAddContactMutation } from "components/redux/features/contactSlice";
 import { nanoid } from 'nanoid';
+import { useDispatch, useSelector } from 'react-redux';
+import { contactOperations, contactSelectors } from "components/redux/contacts";
 
 import { Button, Container, Label, FormInput} from "./ContactForm.styled";
 
 export function ContactForm() {
     const [ name, setName ] = useState('');
     const [phone, setPhone] = useState('');
-    const { data: contacts } = useGetContactsQuery();
-    const [addContact] = useAddContactMutation();
+    const dispatch = useDispatch();
+    const contacts = useSelector(contactSelectors.getContacts);
+    
+    // const { data: contacts } = useGetContactsQuery();
+    // const [addContact] = useAddContactMutation();
    
     const nameInputId = nanoid();
     const phoneInputId = nanoid();
@@ -45,7 +49,7 @@ export function ContactForm() {
     const setContact = value => {
         if (contacts.every(({ name }) =>
             name.toLowerCase() !== value.name.toLowerCase())) {
-            addContact(value);
+            dispatch(contactOperations.addContact(value))
         } else {
             alert(`${value.name} is already in contacts`);
         }
