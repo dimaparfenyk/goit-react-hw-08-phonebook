@@ -1,82 +1,69 @@
 import { useState } from "react";
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
-import { contactOperations, contactSelectors } from "components/redux/contacts";
+import { addContact } from 'redux/contacts/contacts-operation';
+import {contactsSelectors} from 'redux/contacts/contacts-selectors'
 
 import { Button, Container, Label, FormInput} from "./ContactForm.styled";
 
 export function ContactForm() {
     const [ name, setName ] = useState('');
-    const [phone, setPhone] = useState('');
+    const [number, setNumber] = useState('');
+    const contacts = useSelector(contactsSelectors.getContacts);
     const dispatch = useDispatch();
-    const contacts = useSelector(contactSelectors.getContacts);
-    
-    // const { data: contacts } = useGetContactsQuery();
-    // const [addContact] = useAddContactMutation();
    
-    const nameInputId = nanoid();
-    const phoneInputId = nanoid();
+    // const nameInputId = nanoid();
+    // const phoneInputId = nanoid();
   
-   const handleChange = e => {
-        const { name, value } = e.currentTarget;
-    
-       switch (name) {
-           case 'name':
-               setName(value)
-               break;
-           
-           case 'phone':
-               setPhone(value)
-               break; 
-           
-           default:
-               return;
-       }
-    };
+   const onChangeName = e => setName(e.currentTarget.value);
+  const onChangeNumber = e => setNumber(e.currentTarget.value);
 
-    const  handleSubmit = e => {
+    const handleSubmit= e => {
         e.preventDefault();
         
-        setContact({
-            id: nanoid(),
-            name,
-            phone,
-        });
-        setName('');
-        setPhone('');
-    };
+         const newContact = { name, number };
+      if (
+         contacts.some(
+        contact => contact.name.toLowerCase() === name.toLowerCase()
+      )
+      ) {
+         return (`Контакт с именем ${name} уже существует`);
+      }
+      dispatch(addContact(newContact));
+      setName('');
+      setNumber('');
+   };
 
-    const setContact = value => {
-        if (contacts.every(({ name }) =>
-            name.toLowerCase() !== value.name.toLowerCase())) {
-            dispatch(contactOperations.addContact(value))
-        } else {
-            alert(`${value.name} is already in contacts`);
-        }
-    };
+    // const setContact = value => {
+    //     if (contacts.every(({ name }) =>
+    //         name.toLowerCase() !== value.name.toLowerCase())) {
+    //         dispatch(contactOperations.addContact(value))
+    //     } else {
+    //         alert(`${value.name} is already in contacts`);
+    //     }
+    // };
     
     return (
             <form onSubmit={handleSubmit}>
                 <Container>
-                <Label htmlFor={nameInputId}>Name
+                <Label >Name
                     <FormInput
                         type="text"
                         name="name"
-                        id={nameInputId}
+                       
                         value={name}
-                        onChange={handleChange}
+                        onChange={onChangeName}
                         pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
                         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
                         required
                     />
                 </Label>
-                <Label htmlFor={phoneInputId}>Number
+                <Label >Number
                     <FormInput
                         type="tel"
-                        name="phone"
-                        id={phoneInputId}
-                        value={phone}
-                        onChange={handleChange}
+                        name="number"
+                        value={number}
+                        onChange={onChangeNumber}
                         pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
                         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
                         required

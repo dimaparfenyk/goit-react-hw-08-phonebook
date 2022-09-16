@@ -11,9 +11,8 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import contactsReducer from './contacts/contacts-slice';
+import {contactSlice} from './contacts/contacts-slice';
 import authReducer from './auth/auth-slice'
-import filterSlice from './features/filterSlice';
 
 const authPersistConfig = {
    key: 'auth',
@@ -21,24 +20,17 @@ const authPersistConfig = {
   whitelist: ['token'],
 };
 
-const contactsPersistConfig = {
-  key: 'contacts',
-  storage,
-  whitelist: ['token'],   
-};
-
 export const store = configureStore({
   reducer: {
-   contacts:persistReducer(contactsPersistConfig, contactsReducer),
-    filter: filterSlice,
-    auth:persistReducer(authPersistConfig, authReducer)
+   contacts:contactSlice.reducer,
+   auth:persistReducer(authPersistConfig, authReducer)
   },
-  middleware: getDefaultMiddleware => [
-    ...getDefaultMiddleware({
+  middleware: getDefaultMiddleware => 
+    getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    })],
+    }),
   devTools: process.env.NODE_ENV === 'development',
 });
 

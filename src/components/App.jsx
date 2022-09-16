@@ -1,8 +1,9 @@
-import { lazy, useEffect  } from 'react';
+import { lazy, useEffect, Suspense  } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { SharedLayout } from './SharedLayout/SharedLayout';
-import { useDispatch, useSelector } from 'react-redux';
-import { authOperations, authSelector } from './redux/auth';
+import { Layout } from './SharedLayout/Layout';
+import { useDispatch} from 'react-redux';
+import { authOperations } from 'redux/auth/auth-operations';
+
 import { PrivateRoute } from './PrivateRoute/PrivateRoute';
 import { PublicRoute } from './PublicRoute/PublicRoute';
 
@@ -13,48 +14,43 @@ const RegisterPage = lazy(() => import('../pages/RegisterPage'));
 
 export const App = () => {
   const dispatch = useDispatch();
-  const isRefreshing= useSelector(authSelector.getIsRefreshing)
-  
-  useEffect(() => {
-    dispatch(authOperations.getCurrentUser())
-  }, [dispatch])
 
-  return isRefreshing ? (
-    <h1>Refreshing user...</h1>
-  ) : (
-        <Routes>
-        <Route path="/" element={<SharedLayout />}>
-          
-          
-         <Route
-            exact
-            path="/"
+   useEffect(() => {
+      dispatch(authOperations.fetchCurrentUser())
+   }, [dispatch]);
+
+   return (
+     <Suspense>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route
+            path="contacts"
             element={
-               <PrivateRoute>
-                  <HomePage />
-               </PrivateRoute>
-            }
-         />
-         <Route
-            path="login"
-            element={
-               <PublicRoute restricted>
-                  <LoginPage />
-               </PublicRoute>
-            }
-         />
-         <Route
-            path="register"
-            element={
-               <PublicRoute restricted>
-                  <RegisterPage />
-               </PublicRoute>
+              <PrivateRoute>
+                <ContactPage />
+              </PrivateRoute>
             }
           />
-          <Route path="contacts" element={<ContactPage/>}/>
-      </Route>
-    </Routes>
+          <Route
+            path="login"
+            element={
+              <PublicRoute restricted>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="register"
+            element={
+              <PublicRoute restricted>
+                <RegisterPage />
+              </PublicRoute>
+            }
+          />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 };
-
  

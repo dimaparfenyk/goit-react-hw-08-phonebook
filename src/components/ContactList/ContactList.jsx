@@ -1,35 +1,43 @@
-import React from "react";
+import { useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { contactOperations, contactSelectors } from "components/redux/contacts";
-
+import { contactsSelectors } from 'redux/contacts/contacts-selectors';
+import { fetchContacts } from 'redux/contacts/contacts-operation';
 import { List} from "./ContactList.styled";
 import { ContactListItem } from "components/ContactItem/ContactItem";
-import { useEffect } from "react";
+
 
 export const ContactList = () => {
-    const dispatch = useDispatch();
-    const filter = useSelector(state => state.filter.value);
-    const contacts = useSelector(contactSelectors.getContacts);
+const dispatch = useDispatch();
+  const contacts = useSelector(contactsSelectors.getContacts);
+  const filter = useSelector(contactsSelectors.getFilter);
 
-    const filteredItems = filter
-        ? contacts.filter(({ name }) => name.toLowerCase().includes(filter))
-        : contacts;
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  const filteredContacts =  ()=>{
+      const normalizedFilter = filter.toLowerCase();
+      
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+ }
+    const filteredContactsList = filteredContacts();
     
-    useEffect(() => {
-        dispatch(contactOperations.getContacts())
-    }, [dispatch])
-    
-    return (<List>
-        {contacts && filteredItems.map(({ name, phone, id}) =>
-            <ContactListItem
-                key={id}
-                id={id}
-                name={name}
-                phone={phone}
-                />   
-        )}
-    </List>)
+    return (
+        contacts && (
+            < List >
+                {filteredContactsList.map(({ id, name, number }) => {
+                    return (<ContactListItem
+                        key={id}
+                        id={id}
+                        name={name}
+                        number={number}
+                    />)
+                })}
+            </List>
+        ));
 };
 
 ContactList.proptype = {

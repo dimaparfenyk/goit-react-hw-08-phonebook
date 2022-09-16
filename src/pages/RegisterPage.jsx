@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { authOperations } from 'components/redux/auth';
+import { authOperations } from 'redux/auth/auth-operations';
 import { Label, Container, FormInput, Button } from "components/ContactForm/ContactForm.styled";
 
 export default function RegisterPage() {
@@ -10,17 +10,19 @@ export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const onSubmit = async e => {
+    const handleSubmit = async e => {
         e.preventDefault();
         dispatch(authOperations.registerUser({name, email, password}));
         setName('');
         setEmail('');
         setPassword('');
     }
-   return (
-       <form onSubmit={onSubmit}>
+    return (<>
+       <form onSubmit={handleSubmit}>
        <Container>
-           <h1>Register page</h1>
+           <h2 style={{
+                   textAlign: 'center',
+               }}>Register page</h2>
            
                <Label>
                    Name
@@ -51,6 +53,7 @@ export default function RegisterPage() {
                </Label>            
                    <Button type="submit">Register</Button>                       
            </Container>
-            </form>
+        </form>
+        </>
    );
 };
