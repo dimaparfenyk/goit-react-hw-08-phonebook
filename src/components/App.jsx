@@ -1,26 +1,31 @@
-import { lazy, useEffect, Suspense  } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { Layout } from './SharedLayout/Layout';
-import { useDispatch} from 'react-redux';
-import { authOperations } from 'redux/auth/auth-operations';
-
+import { Route, Routes } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { Layout } from 'components/Layout/Layout';
+import { authOperations } from 'redux/auth/authOperation';
+import { useDispatch, useSelector } from 'react-redux';
 import { PrivateRoute } from './PrivateRoute/PrivateRoute';
 import { PublicRoute } from './PublicRoute/PublicRoute';
+import { authSelectors } from 'redux/auth/authSelectors';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
-const ContactPage = lazy(() => import('../pages/ContactPage'));
+const ContactsPage = lazy(() => import('../pages/contactsPage'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
-const RegisterPage = lazy(() => import('../pages/RegisterPage'));
+const RegistrationPage = lazy(() => import('../pages/RegisterPage'));
 
 export const App = () => {
   const dispatch = useDispatch();
+  const isFetchingCurrentUser = useSelector(
+    authSelectors.getIsFetchingCurrentUser
+  );
 
-   useEffect(() => {
-      dispatch(authOperations.fetchCurrentUser())
-   }, [dispatch]);
+  useEffect(() => {
+    dispatch(authOperations.fetchCurrentUser());
+  }, [dispatch]);
 
-   return (
-     <Suspense>
+  return isFetchingCurrentUser ? (
+    <p>Loading...</p>
+  ) : (
+    <Suspense>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
@@ -28,7 +33,7 @@ export const App = () => {
             path="contacts"
             element={
               <PrivateRoute>
-                <ContactPage />
+                <ContactsPage />
               </PrivateRoute>
             }
           />
@@ -44,7 +49,7 @@ export const App = () => {
             path="register"
             element={
               <PublicRoute restricted>
-                <RegisterPage />
+                <RegistrationPage />
               </PublicRoute>
             }
           />
@@ -53,4 +58,3 @@ export const App = () => {
     </Suspense>
   );
 };
- 

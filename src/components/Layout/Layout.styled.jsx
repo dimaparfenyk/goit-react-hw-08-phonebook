@@ -1,12 +1,12 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Header = styled.header`
-    padding-top:20px;
-    padding-bottom: 30px;
-    margin-bottom:60px;
-    border-bottom: 3px solid #989bd2;
-    
-`
+  display: flex;
+  align-items: center;
+  margin-bottom:100px;
+  background-color:#6BBC60;
+  padding:50px 15px;
+`;
 
 export const Button = styled.button`
     background-color: #457aab;

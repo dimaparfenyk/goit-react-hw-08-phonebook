@@ -1,24 +1,34 @@
-import { useDispatch, useSelector } from "react-redux";
+import {
+  UserGreet,
+  Button,
+  Container
+} from './UserMenu.styled';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { authOperations } from "redux/auth/auth-operations"; 
-import {getUserName} from 'redux/auth/auth-selectors'
-import { Button } from "../ContactForm/ContactForm.styled";
-import { GreetText } from "./UserMenu.styled";
+import { authSelectors } from 'redux/auth/authSelectors';
+import { authOperations } from 'redux/auth/authOperation';
 
 export const UserMenu = () => {
-    const dispatch = useDispatch();
-     const userName = useSelector(getUserName);
-    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userName = useSelector(authSelectors.getUserName);
 
-    return (
-        <div>
-            <GreetText>Welcome {userName}!</GreetText>
-            <Button type="button" onClick={() => {
-                dispatch(authOperations.logOut());
-                navigate('/')
-            }}>
-                LogOut
-            </Button>
-        </div>
-    )
-}
+  return (
+    <Container>
+        {/* <LogoNavLink to="/">
+          ContactBook
+        </LogoNavLink> */}
+          <UserGreet> Welcome,{ userName} !</UserGreet>
+        <Button
+          type="button"
+          onClick={() => {
+            dispatch(authOperations.logOut());
+            navigate('/');
+          }}
+        >
+          Log out
+        </Button>
+      
+    </Container>
+  );
+};

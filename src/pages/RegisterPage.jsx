@@ -1,59 +1,80 @@
-import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { authOperations } from 'redux/auth/auth-operations';
-import { Label, Container, FormInput, Button } from "components/ContactForm/ContactForm.styled";
+import { useDispatch } from 'react-redux';
+import { authOperations } from 'redux/auth/authOperation';
+import {
+  Label,
+  FormInput,
+  Button,
+} from '../components/ContactForm/ContactForm.styled';
+import { Container } from './homePage.styled';
 
-export default function RegisterPage() {
-    const dispatch = useDispatch();
+export default function RegistrationPage() {
+  const dispatch = useDispatch();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleSubmit = async e => {
-        e.preventDefault();
-        dispatch(authOperations.registerUser({name, email, password}));
-        setName('');
-        setEmail('');
-        setPassword('');
+  const handleChange = ({ target: { name, value } }) => {
+    switch (name) {
+      case 'name':
+        return setName(value);
+      case 'email':
+        return setEmail(value);
+      case 'password':
+        return setPassword(value);
+      default:
+        return;
     }
-    return (<>
-       <form onSubmit={handleSubmit}>
-       <Container>
-           <h2 style={{
-                   textAlign: 'center',
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    dispatch(authOperations.register({ name, email, password }));
+    setName('');
+    setEmail('');
+    setPassword('');
+  };
+
+  return (
+    <>
+      <form onSubmit={handleSubmit} autoComplete="off">
+        <Container>
+          <h2 style={{
+            textAlign: 'center',
+            marginBottom:'20px'
                }}>Register page</h2>
-           
-               <Label>
-                   Name
-                   <FormInput
-                       type="name"
-                       name={name}
-                       placeholder="Name"
-                       onChange={e=>setName(e.target.value)}
-                   />
-               </Label>
-               <Label>
-                   Email
-                   <FormInput
-                       type="email"
-                       name={email}
-                       placeholder="Email"
-                       onChange={e=>setEmail(e.target.value)}
-                   />
-               </Label>
-               <Label>
-                   Password
-                   <FormInput
-                       type="password"
-                       name={password}
-                       placeholder="Password"
-                       onChange={e=>setPassword(e.target.value)}
-                   />
-               </Label>            
-                   <Button type="submit">Register</Button>                       
-           </Container>
-        </form>
-        </>
-   );
-};
+        <Label>
+            <FormInput
+              onChange={handleChange}
+              type="text"
+              name="name"
+              value={name} 
+              placeholder="Name"
+              />
+        </Label>
+
+        <Label>
+          <FormInput
+            onChange={handleChange}
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={email}
+          />
+        </Label>
+
+        <Label>
+          <FormInput
+            onChange={handleChange}
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={password}
+          />
+        </Label>
+          <Button type="submit">Sign In</Button>
+          </Container>
+      </form>
+    </>
+  );
+}

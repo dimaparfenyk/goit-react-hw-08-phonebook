@@ -1,29 +1,31 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
-import { getIsLoggedIn }  from 'redux/auth/auth-selectors'
+import { authSelectors } from 'redux/auth/authSelectors';
+import { NavLinkStyled } from 'components/AuthNav/AuthNav.styled';
+import { Title, Container, Box } from './homePage.styled';
 
-const styles = {
-  container: {
-    minHeight: 'calc(100vh - 50px)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontWeight: 500,
-    fontSize: 48,
-    textAlign: 'center',
-  },
-};
-
-const HomePage = () => {
-  const isLoggedIn = useSelector(getIsLoggedIn);
+export default function HomePage() {
+  const isLoggedIn = useSelector(authSelectors.getIsLoggedIn);
+  return (
    
-return(!isLoggedIn && (<div style={styles.container}>
-    <h1 style={styles.title}>
-      Welcome to our service
-    </h1>
-  </div>))
+    <Container>
+      {isLoggedIn && (<Title>Congratulation! Now you may create your personal phonebook.
+      </Title>)}
+      {!isLoggedIn && (
+        <>
+          <Title>Hello! Please,
+            to start work with our service Log in or Register
+          </Title>
+          <Box>
+            <NavLinkStyled
+              style={{ marginRight: '20px' }}
+              to="/login">
+              Log in
+            </NavLinkStyled>
+            <NavLinkStyled to="/register">
+              Register
+            </NavLinkStyled>
+          </Box></>)}
+    </Container>
+  );
 };
-
-export default HomePage;
+    

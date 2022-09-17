@@ -1,13 +1,8 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
-export const Nav = styled.div`
-  width: 100%;
-  display: flex;
-`;
-
-export const StyledNavLink = styled(NavLink)`
-  display: inline-block;
+export const NavLinkStyled = styled(NavLink)`
+   display: flex;
   text-decoration: none;
   padding: 0 12px;
   font-weight: 500;
@@ -16,9 +11,17 @@ export const StyledNavLink = styled(NavLink)`
   transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
   &:hover,
   &:focus {
-    transform: scale(0.9);
+    transform: scale(1.1);
   }
   &.active {
     color: #001fff;
   }
 `;
+
+export const NavBox = styled.div`
+display:flex;
+`
+
+export const Container = styled.div`
+display:flex;
+`

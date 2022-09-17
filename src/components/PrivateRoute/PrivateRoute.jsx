@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
-import { getIsLoggedIn } from 'redux/auth/auth-selectors';
+import { authSelectors } from 'redux/auth/authSelectors';
 
 export const PrivateRoute = ({ children }) => {
-  const isLoggedIn = useSelector(getIsLoggedIn);
+  const isLoggedIn = useSelector(authSelectors.getIsLoggedIn);
   return <>{isLoggedIn && children}</>;
 };

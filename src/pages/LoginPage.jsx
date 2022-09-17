@@ -1,11 +1,15 @@
-import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { authOperations } from 'redux/auth/auth-operations';
-
-import { Label, Container, FormInput, Button } from "components/ContactForm/ContactForm.styled";
+import { useState } from 'react';
+import { authOperations } from 'redux/auth/authOperation';
+import {
+  Label,
+  FormInput,
+  Button
+} from '../components/ContactForm/ContactForm.styled';
+import { Container } from './homePage.styled';
 
 export default function LoginPage() {
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -27,36 +31,38 @@ const dispatch = useDispatch();
     setPassword('');
   };
 
-   return (
-      <form onSubmit={handleSubmit}>
-       <Container>
-           <h2  style={{
-                   textAlign: 'center',
+  return (
+  
+    <form onSubmit={handleSubmit}>
+      <Container>
+        <h2  style={{
+          textAlign: 'center',
+          marginBottom:'20px'
                }}>
                    Login page</h2>
-           
-               <Label>
-                   Email
-                   <FormInput
-                       type="email"
-                       name="email"
-                       value={email}
-                       placeholder="Email"
-                        onChange={handleChange}
-                   />
-               </Label>
-               <Label>
-                   Password
-                   <FormInput
-                       type="password"
-                       name="password"
-                       placeholder="Password"
-                       value={password}
-                        onChange={handleChange}
-                   />
-               </Label>
-                   <Button type="submit">Login</Button>           
-           </Container>
-           </form>
-   );
+        <Label>
+          <FormInput
+            onChange={handleChange}
+            type="email"
+            name="email"
+            value={email}
+            placeholder="Email"
+            autocomplete="off"
+          />
+        </Label>
+
+        <Label>
+          <FormInput
+            onChange={handleChange}
+            type="password"
+            name="password"
+            value={password}
+            placeholder="Password"
+          />
+        </Label>
+        <Button type="submit">Log In</Button>
+      </Container>
+    </form>
+    
+  );
 }

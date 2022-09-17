@@ -1,14 +1,12 @@
-import { useEffect} from 'react';
-import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
-import { contactsSelectors } from 'redux/contacts/contacts-selectors';
-import { fetchContacts } from 'redux/contacts/contacts-operation';
-import { List} from "./ContactList.styled";
-import { ContactListItem } from "components/ContactItem/ContactItem";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { List } from './ContactList.styled';
+import { ContactListItem } from 'components/ContactItem/ContactItem';
+import { contactsSelectors } from 'redux/contacts/contactsSelectors';
+import { fetchContacts } from 'redux/contacts/contactOperations';
 
 export const ContactList = () => {
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const contacts = useSelector(contactsSelectors.getContacts);
   const filter = useSelector(contactsSelectors.getFilter);
 
@@ -16,18 +14,18 @@ const dispatch = useDispatch();
     dispatch(fetchContacts());
   }, [dispatch]);
 
-  const filteredContacts =  ()=>{
-      const normalizedFilter = filter.toLowerCase();
-      
+  const filteredContacts = () => {
+    const normalizedFilter = filter.toLowerCase();
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
- }
-    const filteredContactsList = filteredContacts();
-    
-    return (
-        contacts && (
-            < List >
+  };
+
+  const filteredContactsList = filteredContacts();
+
+  return (
+    contacts && (
+      < List >
                 {filteredContactsList.map(({ id, name, number }) => {
                     return (<ContactListItem
                         key={id}
@@ -39,14 +37,3 @@ const dispatch = useDispatch();
             </List>
         ));
 };
-
-ContactList.proptype = {
-    contacts: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-            number: PropTypes.string.isRequired,
-        }),
-  ),
-};
-  
